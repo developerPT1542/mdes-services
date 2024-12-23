@@ -22,7 +22,7 @@ Enter your Docker Hub username and password when prompted. Ensure you have been 
 Clone the repository from the provided URL or download it as a zip file:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/developerPT1542/mdes-services.git
 cd microservices-project
 ```
 

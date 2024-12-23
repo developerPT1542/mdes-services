@@ -1,0 +1,116 @@
+services:
+  consul-server:
+    image: hashicorp/consul:latest
+    container_name: consul-server
+    restart: always
+    volumes:
+      - ./consul-data:/consul/data
+    ports:
+      - "8500:8500"
+    command: >
+      agent -server -ui \
+      -node=server-1 \
+      -bootstrap-expect=1 \
+      -client=0.0.0.0 \
+      -data-dir=/consul/data
+    networks:
+      - app-network
+
+  gateway-service:
+    image: public-repo/gateway-service:latest
+    restart: always
+    ports:
+      - "8080:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    depends_on:
+      - consul-server
+    networks:
+      - app-network
+
+  auth-service:
+    image: public-repo/auth-service:latest
+    restart: always
+    ports:
+      - "8081:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: dotcipher
+      DB_PWD: password123
+      DB_NAME: customer_service
+    depends_on:
+      consul-server:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  logger-service:
+    image: public-repo/logger-service:latest
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    networks:
+      - app-network
+
+  mastercardcs-service:
+    image: public-repo/mastercardcs-service:latest
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    networks:
+      - app-network
+
+  mysql:
+    image: 'mysql:8.0'
+    ports:
+      - "3306:3306"
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MYSQL_DATABASE: customer_service
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password123
+      MYSQL_USER: dotcipher
+    healthcheck:
+      test: ["CMD", "mysql", "-u", "root", "-ppassword", "-e", "SELECT 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - ./db-data/mysql/:/var/lib/mysql
+    networks:
+      - app-network
+
+  mongo:
+    image: 'mongo:4.2.16-bionic'
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: logs
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./db-data/mongo/:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  consul-data:
+  mysql-data:
+  mongo-data:

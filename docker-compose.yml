@@ -17,7 +17,7 @@ services:
       - app-network
 
   gateway-service:
-    image: public-repo/gateway-service:latest
+    image: hub.docker.app/larbipts1/mdescs-services/gateway-service:latest
     restart: always
     ports:
       - "8080:80"
@@ -30,7 +30,7 @@ services:
       - app-network
 
   auth-service:
-    image: public-repo/auth-service:latest
+    image: hub.docker.app/larbipts1/mdescs-services/auth-service:latest
     restart: always
     ports:
       - "8081:80"
@@ -52,7 +52,7 @@ services:
       - app-network
 
   logger-service:
-    image: public-repo/logger-service:latest
+    image: hub.docker.app/larbipts1/mdescs-services/logger-service:latest
     restart: always
     deploy:
       mode: replicated
@@ -61,7 +61,7 @@ services:
       - app-network
 
   mastercardcs-service:
-    image: public-repo/mastercardcs-service:latest
+    image: hub.docker.app/larbipts1/mdescs-services/mastercardcs-service:latest
     restart: always
     deploy:
       mode: replicated

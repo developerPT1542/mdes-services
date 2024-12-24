@@ -41,6 +41,7 @@ Once the services are running, you can access them using the following URLs:
 - **Consul UI:** [http://localhost:8500](http://localhost:8500)
 - **Gateway Service:** [http://localhost:8080](http://localhost:8080)
 - **Auth Service:** [http://localhost:8081](http://localhost:8081)
+- **MDESCS Service:** [http://localhost:8081](http://localhost:8082)
 - **MongoDB:** [http://localhost:27017](http://localhost:27017)
 - **MySQL:** [http://localhost:3306](http://localhost:3306)
 

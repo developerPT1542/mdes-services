@@ -34,28 +34,6 @@ services:
     networks:
       - app-network
 
-  # auth-service:
-  #   image: docker.io/larbipts1/mdescs-services:auth
-  #   restart: always
-  #   ports:
-  #     - "8081:80"
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #   environment:
-  #     DB_HOST: mysql
-  #     DB_PORT: 3306
-  #     DB_USER: dotcipher
-  #     DB_PWD: password123
-  #     DB_NAME: customer_service
-  #   depends_on:
-  #     consul-server:
-  #       condition: service_started
-  #     mysql:
-  #       condition: service_healthy
-  #   networks:
-  #     - app-network
-
   logger-service:
     image: docker.io/larbipts1/mdescs-services:logger
     restart: always
@@ -80,30 +58,6 @@ services:
       - consul-server
     networks:
       - app-network
-
-  # mysql:
-  #   image: 'mysql:8.0'
-  #   ports:
-  #     - "3306:3306"
-  #   restart: always
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
-  #   environment:
-  #     MYSQL_DATABASE: customer_service
-  #     MYSQL_ROOT_PASSWORD: password
-  #     MYSQL_PASSWORD: password123
-  #     MYSQL_USER: dotcipher
-  #   healthcheck:
-  #     test: ["CMD", "mysql", "-u", "root", "-ppassword", "-e", "SELECT 1"]
-  #     interval: 10s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 30s
-  #   volumes:
-  #     - ./db-data/mysql/:/var/lib/mysql
-  #   networks:
-  #     - app-network
 
   mongo:
     image: 'mongo:4.2.16-bionic'
